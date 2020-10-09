@@ -7,12 +7,11 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 //bring routes
-const ourTeamRoutes = require('./routes/our-team');
+const staffRoutes = require('./routes/staff');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const categoryRoutes = require('./routes/category');
 const tagRoutes = require('./routes/tag');
-const blogRoutes = require('./routes/blog');
 
 // app
 const app = express();
@@ -38,12 +37,11 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // routes middleware
-app.use('/api', ourTeamRoutes);
+app.use('/api', staffRoutes);
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api', categoryRoutes);
 app.use('/api', tagRoutes);
-app.use('/api', blogRoutes);
 
 // port
 const port = process.env.PORT || 8000;
