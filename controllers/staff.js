@@ -16,15 +16,21 @@ exports.create = (req, res) => {
 
     const { name, title, body } = fields;
 
+    if (!name || name.length === 0) {
+      return res.status(400).json({
+        error: 'name is required',
+      });
+    }
+
     if (!title || !title.length) {
       return res.status(400).json({
         error: 'title is required',
       });
     }
 
-    if (!body || !body.length) {
+    if (!body || body.length < 20) {
       return res.status(400).json({
-        error: 'Content is required',
+        error: 'Content is too short',
       });
     }
 
