@@ -28,9 +28,9 @@ exports.create = (req, res) => {
       });
     }
 
-    if (!body || body.length < 20) {
+    if (!body || body.length === 0) {
       return res.status(400).json({
-        error: 'Content is too short',
+        error: 'Contend is required',
       });
     }
 
