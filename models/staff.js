@@ -22,14 +22,15 @@ const staffSchema = new mongoose.Schema(
       max: 160,
       required: true,
     },
-
     body: {
       type: {},
       required: true,
       min: 20,
       max: 2000000,
     },
-
+    mdesc: {
+      type: {},
+    },
     photo: {
       data: Buffer,
       contentType: String,
@@ -39,7 +40,7 @@ const staffSchema = new mongoose.Schema(
       ref: 'User',
     },
   },
-  { timestamp: true }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model('Staff', staffSchema);

@@ -4,6 +4,8 @@ const slugify = require('slugify');
 const _ = require('lodash');
 const { errorHandler } = require('../helpers/dbErrorHandler');
 const fs = require('fs');
+const stripHtml = require('string-strip-html');
+// const { smartTrim } = require('../helpers/staff');
 
 exports.create = (req, res) => {
   let form = new formidable.IncomingForm();
@@ -40,6 +42,7 @@ exports.create = (req, res) => {
     staff.slug = slugify(name).toLowerCase();
     staff.title = title;
     staff.body = body;
+    staff.mdesc = stripHtml(body.substring(0, 160));
     staff.postedBy = req.user._id;
 
     if (files.photo) {
@@ -146,4 +149,19 @@ exports.update = (req, res) => {
       });
     });
   });
+};
+
+exports.photo = (req, res) => {
+  const slug = req.params.slug.toLowerCase();
+  Staff.findOne({ slug })
+    .select('photo')
+    .exec((err, blog) => {
+      if (err || !staff) {
+        return res.status(400).json({
+          error: errorHandler(err),
+        });
+      }
+      res.set('Content-Type', staff.photo.contentType);
+      return res.send(staff.photo.data);
+    });
 };
