@@ -155,7 +155,7 @@ exports.photo = (req, res) => {
   const slug = req.params.slug.toLowerCase();
   SupportTeam.findOne({ slug })
     .select('photo')
-    .exec((err, staff) => {
+    .exec((err, supportTeam) => {
       if (err || !supportTeam) {
         return res.status(400).json({
           error: errorHandler(err),
