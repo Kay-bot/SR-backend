@@ -10,6 +10,11 @@ const staffSchema = new mongoose.Schema(
       max: 100,
       required: true,
     },
+    slug: {
+      type: String,
+      unique: true,
+      index: true,
+    },
     title: {
       type: String,
       trim: true,
