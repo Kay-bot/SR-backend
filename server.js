@@ -8,6 +8,7 @@ require('dotenv').config();
 
 //bring routes
 const staffRoutes = require('./routes/staff');
+const supportTeamRoutes = require('./routes/supportTeam');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const categoryRoutes = require('./routes/category');
@@ -38,6 +39,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // routes middleware
 app.use('/api', staffRoutes);
+app.use('/api', supportTeamRoutes);
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api', categoryRoutes);

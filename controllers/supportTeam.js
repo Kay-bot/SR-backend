@@ -1,4 +1,4 @@
-const Staff = require('../models/staff');
+const SupportTeam = require('../models/supportTeam');
 const formidable = require('formidable');
 const slugify = require('slugify');
 const _ = require('lodash');
@@ -37,13 +37,13 @@ exports.create = (req, res) => {
       });
     }
 
-    let staff = new Staff();
-    staff.name = name;
-    staff.slug = slugify(name).toLowerCase();
-    staff.title = title;
-    staff.body = body;
-    staff.mdesc = stripHtml(body.substring(0, 160));
-    staff.postedBy = req.user._id;
+    let supportTeam = new SupportTeam();
+    supportTeam.name = name;
+    supportTeam.slug = slugify(name).toLowerCase();
+    supportTeam.title = title;
+    supportTeam.body = body;
+    supportTeam.mdesc = stripHtml(body.substring(0, 160));
+    supportTeam.postedBy = req.user._id;
 
     if (files.photo) {
       if (files.photo.size > 10000000) {
@@ -51,11 +51,11 @@ exports.create = (req, res) => {
           error: 'Image should be less then 1mb in size',
         });
       }
-      staff.photo.data = fs.readFileSync(files.photo.path);
-      staff.photo.contentType = files.photo.type;
+      supportTeam.photo.data = fs.readFileSync(files.photo.path);
+      supportTeam.photo.contentType = files.photo.type;
     }
 
-    staff.save((err, result) => {
+    supportTeam.save((err, result) => {
       if (err) {
         return res.status(400).json({
           error: errorHandler(err),
@@ -67,7 +67,7 @@ exports.create = (req, res) => {
 };
 
 exports.list = (req, res) => {
-  Staff.find({}).exec((err, data) => {
+  SupportTeam.find({}).exec((err, data) => {
     if (err) {
       return res.status(400).json({
         error: errorHandler(err),
@@ -80,7 +80,7 @@ exports.list = (req, res) => {
 exports.read = (req, res) => {
   const slug = req.params.slug.toLowerCase();
 
-  Staff.findOne({ slug }).exec((err, data) => {
+  SupportTeam.findOne({ slug }).exec((err, data) => {
     if (err) {
       return res.status(400).json({
         error: errorHandler(err),
@@ -93,7 +93,7 @@ exports.read = (req, res) => {
 exports.remove = (req, res) => {
   const slug = req.params.slug.toLowerCase();
 
-  Staff.findOneAndRemove({ slug }).exec((err, data) => {
+  SupportTeam.findOneAndRemove({ slug }).exec((err, data) => {
     if (err) {
       return res.status(400).json({
         error: errorHandler(err),
@@ -108,7 +108,7 @@ exports.remove = (req, res) => {
 exports.update = (req, res) => {
   const slug = req.params.slug.toLowerCase();
 
-  Staff.findOne({ slug }).exec((err, oldStaff) => {
+  SupportTeam.findOne({ slug }).exec((err, oldStaff) => {
     if (err) {
       return res.status(400).json({
         error: 'errorHandler(err)',
@@ -153,15 +153,15 @@ exports.update = (req, res) => {
 
 exports.photo = (req, res) => {
   const slug = req.params.slug.toLowerCase();
-  Staff.findOne({ slug })
+  SupportTeam.findOne({ slug })
     .select('photo')
     .exec((err, staff) => {
-      if (err || !staff) {
+      if (err || !supportTeam) {
         return res.status(400).json({
           error: errorHandler(err),
         });
       }
-      res.set('Content-Type', staff.photo.contentType);
-      return res.send(staff.photo.data);
+      res.set('Content-Type', supportTeam.photo.contentType);
+      return res.send(supportTeam.photo.data);
     });
 };
