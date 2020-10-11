@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 //bring routes
+const leaderRoutes = require('./routes/leader');
 const staffRoutes = require('./routes/staff');
 const supportTeamRoutes = require('./routes/supportTeam');
 const authRoutes = require('./routes/auth');
@@ -38,6 +39,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // routes middleware
+app.use('/api', leaderRoutes);
 app.use('/api', staffRoutes);
 app.use('/api', supportTeamRoutes);
 app.use('/api', authRoutes);
