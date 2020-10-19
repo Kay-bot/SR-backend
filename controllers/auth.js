@@ -107,3 +107,26 @@ exports.adminMiddleware = (req, res, next) => {
     next();
   });
 };
+
+// forgotPassword, resetPassword
+
+exports.forgotPassword = (req, res) => {
+  const { email } = req.body;
+
+  User.findOne({ email }, (err, user) => {
+    if (err || !user) {
+      return res.status(401).json({
+        error: 'Email does not exist',
+      });
+    }
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_RESET_PASSWORD, {
+      expiresIn: '10m',
+    });
+
+    // email
+
+    // populating the db > user > resetPasswordLink
+  });
+};
+
+exports.resetPassword = (req, res) => {};
