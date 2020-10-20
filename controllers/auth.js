@@ -2,6 +2,9 @@ const User = require('../models/user');
 const shortId = require('shortid');
 const jwt = require('jsonwebtoken');
 const expressJwt = require('express-jwt');
+const { sendEmailWithNodemailer } = require('../helpers/email');
+const { errorHandler } = require('../helpers/dbErrorHandler');
+const _ = require('lodash');
 
 exports.signup = (req, res) => {
   User.findOne({ email: req.body.email }).exec((err, user) => {
@@ -124,9 +127,66 @@ exports.forgotPassword = (req, res) => {
     });
 
     // email
-
+    const emailData = {
+      from: process.env.EMAIL_FROM,
+      to: email,
+      subject: `Password reset link`,
+      html: `
+      <p>Please use the following link ot reset your password:</p>
+      <p>${process.env.CLIENT_URL}/auth/password/reset/${token}</p>
+      <hr />
+      <p>This email may contain sensitive information</p>
+      <p>https://strataroofing.com.au</p>
+      `,
+    };
     // populating the db > user > resetPasswordLink
+    return user.updateOne({ resetPasswordLink: token }, (err, success) => {
+      if (err) {
+        return res.json({ error: errorHandler(err) });
+      } else {
+        sendEmailWithNodemailer(req, res, emailData);
+      }
+    });
   });
 };
 
-exports.resetPassword = (req, res) => {};
+exports.resetPassword = (req, res) => {
+  const { resetPasswordLink, newPassword } = req.body;
+
+  if (resetPasswordLink) {
+    jwt.verify(resetPasswordLink, process.env.JWT_RESET_PASSWORD, function (
+      err,
+      decoded
+    ) {
+      if (err) {
+        return res.status(401).json({
+          error: 'Expired link. Try again',
+        });
+      }
+      User.findOne({ resetPasswordLink }, (err, user) => {
+        if (err || !user) {
+          return res.status(401).json({
+            error: 'Something went wrong. Try later',
+          });
+        }
+        const updatedFields = {
+          password: newPassword,
+          resetPasswordLink: '',
+        };
+
+        user = _.extend(user, updatedFields);
+
+        user.save((err, result) => {
+          if (err) {
+            return res.status(400).json({
+              error: errorHandler(err),
+            });
+          }
+          res.json({
+            message: `Password reset. Please login with your new password`,
+          });
+        });
+      });
+    });
+  }
+};

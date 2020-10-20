@@ -34,8 +34,4 @@ router.put(
   resetPassword
 );
 
-// test
-router.get('/secret', requireSignin, (req, res) => {
-  res.json({ message: req.user });
-});
 module.exports = router;

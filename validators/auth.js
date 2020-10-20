@@ -24,7 +24,7 @@ exports.forgotPasswordValidator = [
 ];
 
 exports.resetPasswordValidator = [
-  check('password')
+  check('newPassword')
     .not()
     .isEmpty()
     .isLength({ min: 6 })

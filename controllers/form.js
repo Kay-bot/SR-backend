@@ -13,7 +13,7 @@ exports.contactForm = (req, res) => {
     Sender email: ${email}
     Sender message:${message}`,
     html: `
-    <h4>Email received from contact form</h4>
+    <h4>Email received form contact form</h4>
     <p>Sender name: ${name}</p>
     <p>Sender email: ${email}</p>
     <p>Sender message: ${message}</p>
